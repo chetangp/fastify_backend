@@ -14,9 +14,10 @@ if (!fs.existsSync(logDir)) {
 const logFile = process.env.LOG_FILE || 'src/logs/app.log';
 
 // Create logger instance to log to a file
+const dest = pino.destination(logFile);
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
-}, pino.destination(logFile));
+}, dest);
 
 
 // --- New code for request logger ---
@@ -85,5 +86,7 @@ module.exports = {
   debug: (message, data) => logEvent('debug', message, data),
   trace: (message, data) => logEvent('trace', message, data),
   fatal: (message, data) => logEvent('fatal', message, data),
-  requestLogger
+  requestLogger,
+  final: pino.final,
+  dest
 };
