@@ -20,12 +20,16 @@ async function handleCmd3(pg, body) {
     const classNum = body.class;
     const activity_id = body.id;
     const tableName = `class${classNum}_activity_info`;
-    const getRefQuery = `
+    const getRefQuery = {
+      text: `
           SELECT asset_table_reference
           FROM ${schema}.${tableName} WHERE activity_id=$1;
-        `;
+        `,
+      values: [activity_id],
+      statement_timeout: 5000, // 5 second timeout
+    };
 
-    const refResult = await pg.query(getRefQuery, [activity_id]);
+    const refResult = await pg.query(getRefQuery);
 
     if (refResult.rows && refResult.rows.length > 0) {
       const asset_table_reference = refResult.rows[0].asset_table_reference;
@@ -33,9 +37,12 @@ async function handleCmd3(pg, body) {
       const assert_schema = parts[0];
       const assert_table = parts[1];
 
-      const getDataQuery = `
+      const getDataQuery = {
+        text: `
             SELECT * FROM "${assert_schema}"."${assert_table}"  ORDER BY "order_index" ASC;
-        `;
+        `,
+        statement_timeout: 5000, // 5 second timeout
+      };
 
       const dataResult = await pg.query(getDataQuery);
 
@@ -56,7 +63,7 @@ async function handleStandardCommand(pg, body) {
     if (body.cmd === '1' && queryData.query && queryData.query2 && queryData.query3) {
       return await handleCmd1WithMerge(pg, queryData);
     } else if (queryData.query) {
-      const result = await pg.query(queryData.query);
+      const result = await pg.query({text: queryData.query, statement_timeout: 5000});
       return { success: true, data: result.rows };
     } else {
       return { success: false, message: 'Failed to generate query', statusCode: 400 };
@@ -76,9 +83,9 @@ async function handleCmd1WithMerge(pg, queryData) {
     });
 
     const [result1, result2, result3] = await Promise.all([
-      pg.query(queryData.query),
-      pg.query(queryData.query2),
-      pg.query(queryData.query3)
+      pg.query({text: queryData.query, statement_timeout: 5000}),
+      pg.query({text: queryData.query2, statement_timeout: 5000}),
+      pg.query({text: queryData.query3, statement_timeout: 5000})
     ]);
 
     logger.info('Query results for cmd 1:', {

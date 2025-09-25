@@ -1,4 +1,3 @@
-
 const { Pool } = require('pg');
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
@@ -8,29 +7,35 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
+  connectionTimeoutMillis: 5000, // 5 second timeout
 });
 
 async function createSchemaAndTable() {
-  const client = await pool.connect();
   try {
-    await client.query('CREATE SCHEMA IF NOT EXISTS fastify_log;');
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS fastify_log.http_logs (
-        id SERIAL PRIMARY KEY,
-        datetime TIMESTAMPTZ,
-        method VARCHAR(10),
-        url VARCHAR(2048),
-        request_body JSONB,
-        response_body JSONB,
-        time_taken_ms REAL
-      );
-    `);
-  } finally {
-    client.release();
+    const client = await pool.connect();
+    try {
+      await client.query('CREATE SCHEMA IF NOT EXISTS fastify_log;');
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS fastify_log.http_logs (
+          id SERIAL PRIMARY KEY,
+          datetime TIMESTAMPTZ,
+          method VARCHAR(10),
+          url VARCHAR(2048),
+          request_body JSONB,
+          response_body JSONB,
+          time_taken_ms REAL
+        );
+      `);
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    console.error('Error connecting to database for schema creation:', err);
   }
 }
 
 async function logHttp(logData) {
+  try {
     const client = await pool.connect();
     try {
         const {
@@ -47,11 +52,12 @@ async function logHttp(logData) {
         `;
         const values = [datetime, method, url, request_body, response_body, parseFloat(time_taken_ms)];
         await client.query(query, values);
-    } catch (err) {
-        console.error('Error inserting http log:', err);
     } finally {
         client.release();
     }
+  } catch (err) {
+    console.error('Error connecting to database for http log insertion:', err);
+  }
 }
 
 createSchemaAndTable();
