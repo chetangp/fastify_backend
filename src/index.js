@@ -84,7 +84,7 @@ async function start() {
 
     // Start listening
     await server.listen({ 
-      port: process.env.PORT || 3000, 
+      port: process.env.PORT || 3927, 
       host: process.env.HOST || '0.0.0.0' 
     });
     

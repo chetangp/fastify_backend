@@ -304,3 +304,32 @@
 {"level":30,"time":1758793622064,"pid":17360,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
 {"level":30,"time":1758793622223,"pid":17360,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3000"}
 {"level":30,"time":1758793622223,"pid":17360,"hostname":"AKASH","msg":"Server listening on 3000"}
+{"level":30,"time":1758793971270,"pid":25432,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758793971428,"pid":25432,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3000"}
+{"level":30,"time":1758793971429,"pid":25432,"hostname":"AKASH","msg":"Server listening on 3000"}
+{"level":30,"time":1758793972214,"pid":25432,"hostname":"AKASH","reqId":"req-1","req":{"method":"POST","url":"/frontend_database_interface","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":65155},"msg":"incoming request"}
+{"level":30,"time":1758793972225,"pid":25432,"hostname":"AKASH","msg":"Received request for /frontend_database_interface"}
+{"level":30,"time":1758793972225,"pid":25432,"hostname":"AKASH","msg":"Received request","cmd":"1"}
+{"level":30,"time":1758793972227,"pid":25432,"hostname":"AKASH","msg":"Executing queries for cmd 1:","query1":"\n              SELECT activity_id , activity_name , series_num  , description , outcome , subject  \n              FROM mobile_user.class4_activity_info;\n            ","query2":"\n              SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool\n              FROM user_tracking.prayogeekworkshop_gmail_com;\n            ","query3":"\n              select locked from mobile_user.user_tokens where email = 'prayogeekworkshop@gmail.com';\n            "}
+{"level":30,"time":1758793972595,"pid":25432,"hostname":"AKASH","msg":"Query results for cmd 1:","query1_rowCount":2,"query2_rowCount":1,"query3_rowCount":1}
+{"level":30,"time":1758793972605,"pid":25432,"hostname":"AKASH","reqId":"req-1","requestLog":{"datetime":"2025-09-25T09:52:52.605Z","method":"POST","url":"/frontend_database_interface","request_body":{"cmd":"1","class":"4","id":4601,"user":"prayogeekworkshop@gmail.com","test":"0"},"response_body":"[{\"activity_id\":4601,\"slide_num\":7,\"answer_cnt\":1,\"activity_complete\":\"complete\",\"total_q_slide\":1,\"slide_complete\":true,\"act_complete_bool\":true}]","time_taken_ms":"388.599"},"msg":"Request processed"}
+{"level":30,"time":1758793972606,"pid":25432,"hostname":"AKASH","reqId":"req-1","res":{"statusCode":200},"responseTime":388.5987000018358,"msg":"request completed"}
+{"level":30,"time":1758794007106,"pid":25432,"hostname":"AKASH","reqId":"req-2","req":{"method":"POST","url":"/frontend_database_interface","hostname":"localhost:3000","remoteAddress":"127.0.0.1","remotePort":65155},"msg":"incoming request"}
+{"level":30,"time":1758794007108,"pid":25432,"hostname":"AKASH","msg":"Received request for /frontend_database_interface"}
+{"level":30,"time":1758794007108,"pid":25432,"hostname":"AKASH","msg":"Received request","cmd":"1"}
+{"level":30,"time":1758794007109,"pid":25432,"hostname":"AKASH","msg":"Executing queries for cmd 1:","query1":"\n              SELECT activity_id , activity_name , series_num  , description , outcome , subject  \n              FROM mobile_user.class4_activity_info;\n            ","query2":"\n              SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool\n              FROM user_tracking.prayogeekworkshop_gmail_com;\n            ","query3":"\n              select locked from mobile_user.user_tokens where email = 'prayogeekworkshop@gmail.com';\n            "}
+{"level":30,"time":1758794007437,"pid":25432,"hostname":"AKASH","msg":"Query results for cmd 1:","query1_rowCount":2,"query2_rowCount":1,"query3_rowCount":1}
+{"level":30,"time":1758794007438,"pid":25432,"hostname":"AKASH","reqId":"req-2","requestLog":{"datetime":"2025-09-25T09:53:27.438Z","method":"POST","url":"/frontend_database_interface","request_body":{"cmd":"1","class":"4","id":4601,"user":"prayogeekworkshop@gmail.com","test":"0"},"response_body":"[{\"activity_id\":4601,\"slide_num\":7,\"answer_cnt\":1,\"activity_complete\":\"complete\",\"total_q_slide\":1,\"slide_complete\":true,\"act_complete_bool\":true}]","time_taken_ms":"331.917"},"msg":"Request processed"}
+{"level":30,"time":1758794007438,"pid":25432,"hostname":"AKASH","reqId":"req-2","res":{"statusCode":200},"responseTime":331.9165999889374,"msg":"request completed"}
+{"level":30,"time":1758795146499,"pid":17468,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758795146660,"pid":17468,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3000"}
+{"level":30,"time":1758795146661,"pid":17468,"hostname":"AKASH","msg":"Server listening on 3000"}
+{"level":30,"time":1758795173564,"pid":16552,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758795173652,"pid":16552,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3000"}
+{"level":30,"time":1758795173653,"pid":16552,"hostname":"AKASH","msg":"Server listening on 3000"}
+{"level":30,"time":1758795251120,"pid":17796,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758795251189,"pid":17796,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3000"}
+{"level":30,"time":1758795251189,"pid":17796,"hostname":"AKASH","msg":"Server listening on 3000"}
+{"level":30,"time":1758795461003,"pid":16652,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758795461080,"pid":16652,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
+{"level":30,"time":1758795461080,"pid":16652,"hostname":"AKASH","msg":"Server listening on 3927"}
