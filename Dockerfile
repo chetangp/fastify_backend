@@ -1,7 +1,7 @@
 FROM node:20-slim
 
 # Install Chromium and required dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y \
     chromium \
     fonts-liberation \
     libappindicator3-1 \
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxrandr2 \
     xdg-utils \
-    --no-install-recommends && \
+    --no-install-recommends --fix-missing && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set Puppeteer to use installed Chromium
