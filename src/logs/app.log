@@ -342,3 +342,6 @@
 {"level":30,"time":1758801993252,"pid":11828,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
 {"level":30,"time":1758801993361,"pid":11828,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
 {"level":30,"time":1758801993361,"pid":11828,"hostname":"AKASH","msg":"Server listening on 3927"}
+{"level":30,"time":1758802281850,"pid":12780,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758802281928,"pid":12780,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
+{"level":30,"time":1758802281928,"pid":12780,"hostname":"AKASH","msg":"Server listening on 3927"}

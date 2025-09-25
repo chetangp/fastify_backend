@@ -3,7 +3,7 @@
 require('dotenv').config();
 const path = require('path');
 const fastify = require('fastify');
-const { logger, final, dest } = require('./utils/logger');
+const { logger, dest } = require('./utils/logger');
 const { logHttp } = require('./utils/http-logger');
 
 // Create Fastify instance
@@ -76,18 +76,12 @@ async function registerPlugins() {
 async function gracefulShutdown(signal, err) {
   console.log(`Received ${signal}. Shutting down gracefully...`);
   if (err) {
-    const finalLogger = final(logger, (err, finalLogger, evt) => {
-      if (err) console.error('error caused by final log', err)
-      finalLogger.info(evt)
-      process.exit(err ? 1 : 0)
-    })
-    finalLogger.error(err)
-  } else {
-    server.close(() => {
-      dest.flushSync()
-      process.exit(0)
-    })
+    logger.error(err);
   }
+  server.close(() => {
+    dest.flushSync();
+    process.exit(err ? 1 : 0);
+  });
 }
 
 // Start server
@@ -108,7 +102,6 @@ async function start() {
     
     server.log.info(`Server listening on ${server.server.address().port}`);
   } catch (err) {
-    server.log.error(err);
     gracefulShutdown('startup error', err);
   }
 }
