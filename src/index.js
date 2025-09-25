@@ -72,6 +72,19 @@ async function registerPlugins() {
   await server.register(require('./routes'));
 }
 
+// Graceful shutdown function
+async function gracefulShutdown(signal) {
+  console.log(`Received ${signal}. Shutting down gracefully...`);
+  try {
+    await server.close();
+    console.log('Server closed.');
+    process.exit(0);
+  } catch (err) {
+    console.error('Error during graceful shutdown:', err);
+    process.exit(1);
+  }
+}
+
 // Start server
 async function start() {
   try {
@@ -91,7 +104,7 @@ async function start() {
     server.log.info(`Server listening on ${server.server.address().port}`);
   } catch (err) {
     server.log.error(err);
-    process.exit(1);
+    gracefulShutdown('startup error');
   }
 }
 
@@ -99,15 +112,19 @@ async function start() {
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled rejection:', err);
   server.log.error(err);
-  process.exit(1);
+  gracefulShutdown('unhandledRejection');
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
   server.log.error(err);
-  process.exit(1);
+  gracefulShutdown('uncaughtException');
 });
+
+// Handle termination signals
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 // Start the server
 start();
