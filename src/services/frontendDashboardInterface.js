@@ -82,11 +82,17 @@ async function handleCmd1WithMerge(pg, queryData) {
       query3: queryData.query3
     });
 
-    const [result1, result2, result3] = await Promise.all([
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Query timeout')), 10000)
+    );
+
+    const queries = Promise.all([
       pg.query({text: queryData.query, statement_timeout: 5000}),
       pg.query({text: queryData.query2, statement_timeout: 5000}),
       pg.query({text: queryData.query3, statement_timeout: 5000})
     ]);
+
+    const [result1, result2, result3] = await Promise.race([queries, timeout]);
 
     logger.info('Query results for cmd 1:', {
       query1_rowCount: result1.rowCount,
