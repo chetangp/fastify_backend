@@ -1,0 +1,465 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "5d4dbdb7-c22c-43bd-bda4-5017b5e95264",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1060,
+        20
+      ],
+      "id": "6f6bab2b-59f4-41cd-bd95-6bdebf80c7ca",
+      "name": "Webhook1",
+      "webhookId": "5d4dbdb7-c22c-43bd-bda4-5017b5e95264"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        420,
+        180
+      ],
+      "id": "8a60164e-e4d9-4230-ba13-6cc241b1d398",
+      "name": "Postgres2",
+      "credentials": {
+        "postgres": {
+          "id": "YxqXDseVhVjC58vV",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "a94e3244-3467-48bf-ac89-3b1e88588179",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const original = $items('Webhook1')[0].json.body;\nconst schema = original.user;\nconst classNum = original.class;\nconst section = original.section;\nconst cmd = original.cmd;\nconst activity_id = original.activity_id;\nconst id = original.id;\nlet assert = \"\";\nlet assert_schema = \"\";\nlet assert_table = \"\";\n\nif (cmd == \"3\") {\n  assert = $json.asset_table_reference; \n  const parts = assert.split('.');\n  assert_schema = parts[0];\n  assert_table = parts[1];\n}\nlet tableName = \"\";\nlet query = \"\";\nlet query2 = \"\";\n\nswitch (cmd) {\n  case '1':\n    // Table: auden_cbse_class{class}_activities\n    tableName = `${schema}_class${classNum}_activities`;\n    let tmp1 = section.toLowerCase();\n    let class_section1 = `class${classNum}_${tmp1}`;\n    query = `\n      SELECT activity_id , activity_name , series_num  , description , outcome , subject  \n      FROM ${schema}.${tableName};\n`;\n    query2 = `SELECT activity_id, slide_num , a_cnt , activity_complete FROM slide_tracker.${schema}_${class_section1}_act_prog_info;`\n    console.log(\"Executed cmd 1, table:\", tableName);\n    return {\n      query , query2\n      };\n    break;\n\n  case '2':\n    // Table: auden_cbse_class{class}_resources\n    tableName = `${schema}_info`;\n    query = `\n      SELECT class, no_of_sections\n      FROM ${schema}.${tableName};\n    `;\n    console.log(\"Executed cmd 2, table:\", tableName);\n    break;\n\n  case '3':\n    tableName = `${schema}_class${classNum}_activities`;\n    query = `\nSELECT * FROM \"${assert_schema}\".\"${assert_table}\"  ORDER BY \"order_index\" ASC;\n    `\n    console.log(\"Executed cmd 3, table:\", tableName);\n    break;\n\n  case '4':\n    // Table: auden_cbse_class{class}_students\n    tableName = `${schema}_class${classNum}_${section}_student_info`;\n    query = `\n      SELECT id, name, chance\n      FROM ${schema}.${tableName} ;\n    `;\n    console.log(\"Executed cmd 3, table:\", tableName);\n    break;\n\n  case '5':\n    let tmp = section.toLowerCase();\n    let class_section = `class${classNum}_${tmp}`;\n    let resume = false;\n    let Activity_completed = false;\n    resume = original.is_resume; \n    Activity_completed = original.Activity_completed;\n    if(resume){\n      query = `select activity_id from  slide_tracker.${schema}_${class_section}_act_prog_info where date = (SELECT MAX(date) AS latest_date\nFROM slide_tracker.${schema}_${class_section}_act_prog_info);`\n    }\n    else{\n       query = `SELECT slide_num , a_cnt , activity_id FROM slide_tracker.${schema}_${class_section}_act_prog_info where activity_id='${activity_id}';`\n    }\n    if(Activity_completed){\n      query = `update slide_tracker.${schema}_${class_section}_act_prog_info set activity_complete='complete'   where activity_id='${activity_id}' `;\n    }\n    console.log(\"Executed cmd 5 track the slides\");\n    break;\n\n  case '6':\n    tableName = `${schema}_class${classNum}_activities`;\n    query = `select activity_id from ${schema}.${tableName} where series_num = (select series_num from ${schema}.${tableName} where activity_id='${activity_id}')+1;`\n    break;\n\n  case '7':\n    let tmps = section.toLowerCase();\n    let class_sections = `class${classNum}_${tmps}`;\n    query = `update slide_tracker.${schema}_${class_sections}_act_prog_info set slide_num=0 , a_cnt=0 where activity_id='${activity_id}'; `\n    break;\n\n  case '8':\n    if(schema === 'test_school'){\n        query = `\nSELECT audio_prompt FROM prompt_info.test_prompts WHERE activity_id='${id}' ;\n    `;\n    }\n    else{\n         query = `\nSELECT audio_prompt FROM prompt_info.activity_prompts WHERE activity_id='${id}' ;\n    `;\n    }\n  \n  console.log(\"Executed cmd 8, table:\", tableName);\n  break;\n    \n  default:\n    console.log(\"Executed default, no query constructed.\");\n    break;\n}\n\nreturn {\n  query\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        40
+      ],
+      "id": "a4183435-be27-4ca0-a2bd-ad432498821f",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -340,
+        -80
+      ],
+      "id": "72e86bd3-36d8-41e4-a97d-bc5bbc79a802",
+      "name": "Postgres3",
+      "credentials": {
+        "postgres": {
+          "id": "YxqXDseVhVjC58vV",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const schema = $json.body.user;\nconst classNum = $json.body.class;\nconst section = $json.body.section;\nconst cmd = $json.body.cmd;\nconst activity_id = $json.body.id;\n\nlet tableName = \"\";\nlet query = \"\";\n\n\ntableName = `${schema}_class${classNum}_activities`;\nquery = `\n      SELECT asset_table_reference\n      FROM ${schema}.${tableName} WHERE activity_id='${activity_id}';\n    `;\nconsole.log(\"table:\", tableName);\n\nreturn {\n  query\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -520,
+        -80
+      ],
+      "id": "e1f61cb3-ef81-49e7-8c6a-31f5c197003a",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.cmd }}",
+                    "rightValue": "3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b2e1116f-2c33-45e3-8d57-f9581e0dd303"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8ad58656-3872-4b4f-ac5b-4ed5d0765281",
+                    "leftValue": "={{ [\"1\", \"2\", \"3\"].includes($json.body.cmd.toString()) }}",
+                    "rightValue": "=",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -760,
+        20
+      ],
+      "id": "cc6158fa-b8b1-4c0a-9b64-f8b3a91e5df8",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f61acb1e-11a7-40dc-8067-09d4a7a95b7d",
+              "leftValue": "={{ $('Webhook1').item.json.body.cmd }}",
+              "rightValue": "1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        140,
+        40
+      ],
+      "id": "8676a6a5-b3fa-49b6-ad0e-70f3e1c6c34c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        420,
+        -140
+      ],
+      "id": "6d6d7dff-6854-4ce8-9bbb-cd28c265d474",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "YxqXDseVhVjC58vV",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query2 }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        420,
+        20
+      ],
+      "id": "53308927-58f2-458c-9f20-2f0ed4ff07e2",
+      "name": "Postgres1",
+      "credentials": {
+        "postgres": {
+          "id": "YxqXDseVhVjC58vV",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        620,
+        -100
+      ],
+      "id": "cb8333b9-fae4-47cb-866f-2fd64122163e",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// N8N Code Node - Get data from previous node\nconst inputData = $input.all();\n\n// Separate activity details and progress data\nconst activityDetails = inputData.filter(item => item.json.hasOwnProperty('series_num'));\nconst progressData = inputData.filter(item => item.json.hasOwnProperty('slide_num'));\n\n// Create a map for quick lookup of progress data by activity_id\nconst progressMap = {};\nprogressData.forEach(item => {\n  progressMap[item.json.activity_id] = item.json;\n});\n\n// Transform the data\nconst transformedData = activityDetails.map(item => {\n  const activity = item.json;\n  const progress = progressMap[activity.activity_id];\n  \n  // Determine activity completion status based on progress\n  let activityComplete = \"not complete\";\n  if (progress) {\n    // Customize this logic based on your completion criteria\n    if (parseInt(progress.slide_num) > 0 && parseInt(progress.a_cnt) > 0) {\n      activityComplete = \"complete\";\n    }\n  }\n  \n  return {\n    activity_id: activity.activity_id,\n    activity_name: activity.activity_name,\n    slide_num: progress ? progress.slide_num : \"0\",\n    a_cnt: progress ? progress.a_cnt : \"0\",\n    activity_complete: activityComplete,\n    description: activity.description,\n    outcome: activity.outcome,\n    subject: activity.subject\n  };\n});\n\n// Sort by series_num (descending order like in expected output)\nconst seriesMap = {};\nactivityDetails.forEach(item => {\n  seriesMap[item.json.activity_id] = item.json.series_num;\n});\n\ntransformedData.sort((a, b) => {\n  return seriesMap[b.activity_id] - seriesMap[a.activity_id];\n});\n\n// Return the transformed data for N8N\nreturn transformedData.map(item => ({ json: item }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        -100
+      ],
+      "id": "8df2d1ff-e7fd-44b6-9300-a04454b28be8",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "1. Webhook Receives Request\n• Frontend sends POST request with cmd parameter\n• Contains user, class, section info\n• Triggers the workflow\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1000,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "7c5feb8e-d82b-4150-a46a-738438fd5e19",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "2. Switch Routes Request\n• Checks cmd value (1-8)\n• If cmd=3: gets asset table first\n• Routes to appropriate code block"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -500,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "08e9cfdc-29f5-4515-8990-061c05b18ec3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "3. Database Queries\n• Code generates SQL based on cmd\n• Queries activities, students, progress\n• Special handling for cmd=1 (dual queries)\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        40,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "29d9330a-72de-432d-b592-b2ad24032ab8",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "4. Response Back\n• Merges and transforms data\n• Combines activity + progress info\n• Sends JSON response to frontend"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "68ab3145-f2c7-4bc8-a121-5940cd399f7b",
+      "name": "Sticky Note3"
+    }
+  ],
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres3": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Postgres3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Postgres2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c5e70f2cab5fc13d3a0e313b83bf264f840e2e5321efe5def580edb4e112e3a"
+  }
+}

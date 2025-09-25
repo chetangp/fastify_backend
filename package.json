@@ -1,0 +1,38 @@
+{
+  "name": "proyogeek-backend",
+  "version": "1.0.0",
+  "description": "A Node.js backend with Fastify and Supabase PostgreSQL integration",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "fastify",
+    "supabase",
+    "postgres",
+    "webhook",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^8.3.0",
+    "@fastify/env": "^4.2.0",
+    "@fastify/swagger": "^8.8.0",
+    "@supabase/supabase-js": "^2.31.0",
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.21.0",
+    "fastify-plugin": "^4.5.1",
+    "pg": "^8.16.3",
+    "pino": "^8.14.2",
+    "pino-pretty": "^10.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2",
+    "nodemon": "^3.0.1"
+  }
+}
