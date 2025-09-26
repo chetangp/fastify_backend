@@ -3,6 +3,11 @@
 const { logger } = require('../utils/logger');
 
 async function routes(fastify, options) {
+  // Health check route
+  fastify.get('/health', async (request, reply) => {
+    return { status: 'ok', message: 'Server is up and running' };
+  });
+
   // Register all route modules here
   fastify.register(require('./api'), { prefix: '/api' });
   
