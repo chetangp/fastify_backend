@@ -63,7 +63,7 @@ async function handleStandardCommand(pg, body) {
     if (body.cmd === '1' && queryData.query && queryData.query2 && queryData.query3) {
       return await handleCmd1WithMerge(pg, queryData);
     } else if (queryData.query) {
-      const result = await pg.query({text: queryData.query, statement_timeout: 5000});
+      const result = await pg.query(queryData.query);
       return { success: true, data: result.rows };
     } else {
       return { success: false, message: 'Failed to generate query', statusCode: 400 };
@@ -87,9 +87,9 @@ async function handleCmd1WithMerge(pg, queryData) {
     );
 
     const queries = Promise.all([
-      pg.query({text: queryData.query, statement_timeout: 5000}),
-      pg.query({text: queryData.query2, statement_timeout: 5000}),
-      pg.query({text: queryData.query3, statement_timeout: 5000})
+      pg.query(queryData.query),
+      pg.query(queryData.query2),
+      pg.query(queryData.query3)
     ]);
 
     const [result1, result2, result3] = await Promise.race([queries, timeout]);
@@ -120,9 +120,9 @@ async function handleCmd1WithMerge(pg, queryData) {
 
 function generateQuery(body) {
     const cmd = body.cmd;
-    let query = "";
-    let query2 = "";
-    let query3 = "";
+    let query = null;
+    let query2 = null;
+    let query3 = null;
 
     switch (cmd) {
         case '1': {
@@ -135,17 +135,24 @@ function generateQuery(body) {
             const user = (mail || "").toString().replace(/[^a-zA-Z0-9_]/g, "_") || "samkirma4_gmail_com";
             const tableName = `class${classNum}_activity_info`;
 
-            query = `
-              SELECT activity_id , activity_name , series_num  , description , outcome , subject  
-              FROM ${schema}.${tableName};
-            `;
-            query2 = `
-              SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool
-              FROM user_tracking.${user};
-            `;
-            query3 = `
-              select locked from mobile_user.user_tokens where email = '${mail}';
-            `;
+            query = {
+              text: `
+                SELECT activity_id , activity_name , series_num  , description , outcome , subject  
+                FROM ${schema}.${tableName};
+              `
+            };
+            query2 = {
+              text: `
+                SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool
+                FROM user_tracking.${user};
+              `
+            };
+            query3 = {
+              text: `
+                select locked from mobile_user.user_tokens where email = $1;
+              `,
+              values: [mail]
+            };
             break;
         }
         case '2': {
@@ -154,23 +161,32 @@ function generateQuery(body) {
             const activity_id = body.id;
 
             if (isComplete) {
-                query = `
-                 update user_tracking.${user} set  activity_complete = ${isComplete} where activity_id=${activity_id};
-                `;
+                query = {
+                  text: `
+                   update user_tracking.${user} set  activity_complete = $1 where activity_id=$2;
+                  `,
+                  values: [isComplete, activity_id]
+                };
             } else {
-                query = `
-                  SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool
-                  FROM user_tracking.${user}
-                  WHERE activity_id = ${activity_id};
-                `;
+                query = {
+                  text: `
+                    SELECT activity_id , slide_num, answer_cnt , activity_complete , total_q_slide , slide_complete , act_complete_bool
+                    FROM user_tracking.${user}
+                    WHERE activity_id = $1;
+                  `,
+                  values: [activity_id]
+                };
             }
             break;
         }
         case '4': {
             const email = body.user;
-            query = `
-                select p_input_token, p_output_token, p_total from  mobile_user.user_tokens where email='${email}';
-                `;
+            query = {
+              text: `
+                  select p_input_token, p_output_token, p_total from  mobile_user.user_tokens where email=$1;
+                  `,
+              values: [email]
+            };
             break;
         }
         default:

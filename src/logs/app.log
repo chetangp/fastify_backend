@@ -357,3 +357,27 @@
 {"level":30,"time":1758806740070,"pid":24584,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
 {"level":30,"time":1758806740169,"pid":24584,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
 {"level":30,"time":1758806740170,"pid":24584,"hostname":"AKASH","msg":"Server listening on 3927"}
+{"level":30,"time":1758824193965,"pid":18380,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758890783309,"pid":22228,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758890783579,"pid":22228,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
+{"level":30,"time":1758890783579,"pid":22228,"hostname":"AKASH","msg":"Server listening on 3927"}
+{"level":30,"time":1758890884522,"pid":22228,"hostname":"AKASH","reqId":"req-1","req":{"method":"POST","url":"//frontend_database_interface","hostname":"localhost:3927","remoteAddress":"127.0.0.1","remotePort":51298},"msg":"incoming request"}
+{"level":40,"time":1758890884524,"pid":22228,"hostname":"AKASH","msg":"Route not found: POST //frontend_database_interface"}
+{"level":30,"time":1758890884528,"pid":22228,"hostname":"AKASH","reqId":"req-1","requestLog":{"datetime":"2025-09-26T12:48:04.528Z","method":"POST","url":"//frontend_database_interface","request_body":{"cmd":"2","class":"4","id":4601,"user":"prayogeekworkshop@gmail.com","test":"0"},"response_body":"{\"statusCode\":404,\"error\":\"Not Found\",\"message\":\"Route not found\"}","time_taken_ms":"5.510"},"msg":"Request processed"}
+{"level":30,"time":1758890884529,"pid":22228,"hostname":"AKASH","reqId":"req-1","res":{"statusCode":404},"responseTime":5.510199993848801,"msg":"request completed"}
+{"level":30,"time":1758890944714,"pid":22228,"hostname":"AKASH","reqId":"req-2","req":{"method":"POST","url":"/frontend_database_interface","hostname":"localhost:3927","remoteAddress":"127.0.0.1","remotePort":50253},"msg":"incoming request"}
+{"level":30,"time":1758890944715,"pid":22228,"hostname":"AKASH","msg":"Received request for /frontend_database_interface"}
+{"level":30,"time":1758890944715,"pid":22228,"hostname":"AKASH","msg":"Received request","cmd":"2"}
+{"level":30,"time":1758890944853,"pid":22228,"hostname":"AKASH","reqId":"req-2","requestLog":{"datetime":"2025-09-26T12:49:04.853Z","method":"POST","url":"/frontend_database_interface","request_body":{"cmd":"2","class":"4","id":4601,"user":"prayogeekworkshop@gmail.com","test":"0"},"response_body":"[{\"activity_id\":4601,\"slide_num\":7,\"answer_cnt\":1,\"activity_complete\":\"complete\",\"total_q_slide\":1,\"slide_complete\":true,\"act_complete_bool\":true}]","time_taken_ms":"139.049"},"msg":"Request processed"}
+{"level":30,"time":1758890944854,"pid":22228,"hostname":"AKASH","reqId":"req-2","res":{"statusCode":200},"responseTime":139.04909998178482,"msg":"request completed"}
+{"level":30,"time":1758891709202,"pid":22228,"hostname":"AKASH","reqId":"req-3","req":{"method":"POST","url":"/frontend_database_interface","hostname":"localhost:3927","remoteAddress":"127.0.0.1","remotePort":63293},"msg":"incoming request"}
+{"level":30,"time":1758891709202,"pid":22228,"hostname":"AKASH","msg":"Received request for /frontend_database_interface"}
+{"level":30,"time":1758891709202,"pid":22228,"hostname":"AKASH","msg":"Received request","cmd":"2"}
+{"level":30,"time":1758891709332,"pid":22228,"hostname":"AKASH","reqId":"req-3","requestLog":{"datetime":"2025-09-26T13:01:49.332Z","method":"POST","url":"/frontend_database_interface","request_body":{"cmd":"2","class":"4","id":4601,"user":"prayogeekworkshop@gmail.com","test":"0"},"response_body":"[{\"activity_id\":4601,\"slide_num\":7,\"answer_cnt\":1,\"activity_complete\":\"complete\",\"total_q_slide\":1,\"slide_complete\":true,\"act_complete_bool\":true}]","time_taken_ms":"129.607"},"msg":"Request processed"}
+{"level":30,"time":1758891709332,"pid":22228,"hostname":"AKASH","reqId":"req-3","res":{"statusCode":200},"responseTime":129.60670000314713,"msg":"request completed"}
+{"level":30,"time":1758892256899,"pid":12216,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758892256999,"pid":12216,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
+{"level":30,"time":1758892257000,"pid":12216,"hostname":"AKASH","msg":"Server listening on 3927"}
+{"level":30,"time":1758892338664,"pid":23132,"hostname":"AKASH","msg":"Connected to PostgreSQL database"}
+{"level":30,"time":1758892338732,"pid":23132,"hostname":"AKASH","msg":"Server listening at http://0.0.0.0:3927"}
+{"level":30,"time":1758892338732,"pid":23132,"hostname":"AKASH","msg":"Server listening on 3927"}
